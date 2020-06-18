@@ -32,6 +32,11 @@ router.get("/profile", userAuth, async (req, res) => {
   return res.json(serializeUser(req.user));
 });
 
+//Books
+//Book List
+router.get("/books",userAuth, checkRole(["teacher"]), commonController.getAllBooks);
+
+
 // teacher Protected Route
 router.get(
   "/teacher-protectd",

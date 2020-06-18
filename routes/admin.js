@@ -42,7 +42,7 @@ router.post("/register-admin", async (req, res) => {
 
 
 // Admin Login Route
-router.post("/login-admin", async (req, res) => {
+router.post("/login", async (req, res) => {
   await userLogin(req.body, "admin", res);
 });
 
@@ -69,6 +69,13 @@ router.put("/change-password/:id",
             commonController.changePasword);
 
 
+//Book
+//Book upload
+router.post("/upload-book", userAuth, checkRole(["admin"]), adminController.uploadBook);
+//Get books list
+router.get("/books",userAuth, checkRole(["admin"]), commonController.getAllBooks);
+//Edit Books
+router.put("/edit-book/:id",userAuth, checkRole(["admin"]), adminController.editBook);
 
 
 
@@ -91,5 +98,6 @@ router.get(
     return res.json("Admin and Teacher");
   }
 );
+
 
 module.exports = router;

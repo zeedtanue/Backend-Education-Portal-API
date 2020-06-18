@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const Book = require('../models/Book');
 const bcrypt = require("bcryptjs");
 
 exports.changePasword=async(req,res)=>{
@@ -15,4 +16,16 @@ exports.changePasword=async(req,res)=>{
       console.log(err)
     }
   
+  };
+
+  exports.getAllBooks = async(req, res) => {
+    Book.find({}, function(err, books) {
+      var bookMap = {};
+  
+      books.forEach(function(book) {
+        bookMap[book._id] = book;
+      });
+  
+      res.send(bookMap);  
+    });
   };
