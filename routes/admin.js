@@ -1,5 +1,11 @@
 const router = require("express").Router();
 // Bring in the User Registration function
+
+const User =require('../models/User');
+const mongoose= require ('mongoose');
+
+
+
 const {
   userAuth,
   userLogin,
@@ -14,6 +20,7 @@ const commonController =require("../controllers/commonController");
 
 
 
+
 router.get("/", function(req, res, next) {
   res.render('index', { title: 'Admin' });
 })
@@ -21,25 +28,32 @@ router.get("/", function(req, res, next) {
 //post requests
 //Register users
 // student Registeration Route
-router.post("/register-student", async (req, res) => {
-  await userRegister(req.body, "student", res);
-});
+router.post("/register-student", commonController.registerStudent);
 
 // teacher Registration Route
-router.post("/register-teacher", async (req, res) => {
-  await userRegister(req.body, "teacher", res);
-});
+router.post("/register-teacher", commonController.registerTeacher);
 
 // PARENTS Route
-router.post("/register-parent", async (req, res) => {
-  await userRegister(req.body, "parent", res);
-});
+router.post("/register-parent", commonController.registerParent);
 
 // Admin Registration Route
-router.post("/register-admin", async (req, res) => {
-  await userRegister(req.body, "admin", res);
-});
+router.post("/register-admin", commonController.registerUser)
 
+
+router.post('/upload-demo',function(req, res) {
+  if (!req.files || Object.keys(req.files).length === 0) {
+    return res.status(400).send('No files were uploaded.');
+  }
+
+  let sampleFile = req.files.sampleFile;
+  console.log(req.files.sampleFile.data)
+  sampleFile.mv('public/profile/filename.jpg', function(err) {
+    if (err)
+      return res.status(500).send(err);
+
+    res.send('File uploaded!');
+  });
+});
 
 // Admin Login Route
 router.post("/login", async (req, res) => {

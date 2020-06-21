@@ -4,6 +4,7 @@ const bp = require("body-parser");
 const passport = require("passport");
 const { connect } = require("mongoose");
 const { success, error } = require("consola");
+const fileUpload = require('express-fileupload');
 
 // Bring in the app constants
 const { DB, PORT } = require("./config");
@@ -15,6 +16,7 @@ const app = exp();
 app.use(cors());
 app.use(bp.json());
 app.use(passport.initialize());
+app.use(fileUpload());
 
 require("./middlewares/passport")(passport);
 
