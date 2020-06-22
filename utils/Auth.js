@@ -7,41 +7,64 @@ const { SECRET } = require("../config");
 /**
  * @DESC To register the user (ADMIN, SUPER_ADMIN, USER)
  */
-const userRegister = (req, res, role) => {
-  if (!req.files || Object.keys(req.files).length === 0) {
-    return res.status(400).send('No files were uploaded.');
-  }
-  let profileImage = req.files.profileImage;
 
-  let uploadPath= `public/profile/${req.body.userid}.jpg`;
-  
-  profileImage.mv( uploadPath, function(err) {
-    if (err)
-      return res.status(500).send(err);
 
-  });
 
-  const password =  bcrypt.hashSync(req.body.userid, 12);
 
-  const product = new User({
-    name: req.body.name,
-    email: req.body.email,
-    role: role,
-    userid:req.body.userid,
-    password:password,
-    profileImage: uploadPath
-  });
-  product
-    .save()
-    .then(result => {
-      console.log(result);
-      
-    })
-    .catch(err => {
-      console.log(err);
-      
+
+
+
+ 
+const userRegister = async (userDets, role, res) => {
+  try {
+    // Validate the userid
+    let useridNotTaken = await validateuserid(userDets.userid);
+    if (!useridNotTaken) {
+      return res.status(400).json({
+        message: `userid is already taken.`,
+        success: false
+      });
+    }
+
+    // validate the email
+    let emailNotRegistered = await validateEmail(userDets.email);
+    if (!emailNotRegistered) {
+      return res.status(400).json({
+        message: `Email is already registered.`,
+        success: false
+      });
+    }
+
+
+    
+
+
+    // Get the hashed password
+    const password = await bcrypt.hash(userDets.userid, 12);
+
+    
+
+    // create a new user
+    const newUser = new User({
+      ...userDets,
+      password,
+      role
+    });
+
+    await newUser.save();
+    return res.status(201).json({
+      message: "Hurry! now you are successfully registred. Please nor login.",
+      success: true
+    });
+  } catch (err) {
+    // Implement logger function (winston)
+    return res.status(500).json({
+      message: "Unable to create your account.",
+      success: false
     });
   }
+};
+
 
 /**
  * @DESC To Login the user (ADMIN, SUPER_ADMIN, USER)

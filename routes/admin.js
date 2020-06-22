@@ -37,23 +37,8 @@ router.post("/register-teacher", commonController.registerTeacher);
 router.post("/register-parent", commonController.registerParent);
 
 // Admin Registration Route
-router.post("/register-admin", commonController.registerUser)
+router.post("/register-admin", commonController.registerAdmin)
 
-
-router.post('/upload-demo',function(req, res) {
-  if (!req.files || Object.keys(req.files).length === 0) {
-    return res.status(400).send('No files were uploaded.');
-  }
-
-  let sampleFile = req.files.sampleFile;
-  console.log(req.files.sampleFile.data)
-  sampleFile.mv('public/profile/filename.jpg', function(err) {
-    if (err)
-      return res.status(500).send(err);
-
-    res.send('File uploaded!');
-  });
-});
 
 // Admin Login Route
 router.post("/login", async (req, res) => {
@@ -64,17 +49,17 @@ router.post("/login", async (req, res) => {
 //Get requests
 //get users
 // Profile Route
-router.get("/profile", userAuth, async (req, res) => {
+router.get("/profile",  async (req, res) => {
+  console.log(id);
   return res.json(serializeUser(req.user));
 });
 
 //All the profile get
-router.get("/users",userAuth, adminController.getAllUsers);
-
-
-
+router.get("/user", adminController.getAllUser);
+//Get specific profile
+router.get("/user/:id", adminController.getUser);
 //Delete
-router.delete("/users/:id", userAuth,checkRole(["admin"]), adminController.deleteUser)
+router.delete("/user/:id", userAuth,checkRole(["admin"]), adminController.deleteUser)
 
 //admin change password
 router.put("/change-password/:id", 
@@ -85,11 +70,15 @@ router.put("/change-password/:id",
 
 //Book
 //Book upload
-router.post("/upload-book", userAuth, checkRole(["admin"]), adminController.uploadBook);
+router.post("/upload-book",  adminController.uploadBook);
 //Get books list
-router.get("/books",userAuth, checkRole(["admin"]), commonController.getAllBooks);
+router.get("/books", commonController.getAllBooks);
+//Get specific Book
+router.get("/book/:id", commonController.getBook)
 //Edit Books
-router.put("/edit-book/:id",userAuth, checkRole(["admin"]), adminController.editBook);
+router.put("/edit-book/:id", adminController.editBook);
+//delete book
+router.delete("/book/:id", commonController.deleteBook)
 
 
 
@@ -112,6 +101,24 @@ router.get(
     return res.json("Admin and Teacher");
   }
 );
+
+
+//notice
+//get
+router.get("/all-notice",adminController.getAllNotice )
+//specific notice
+router.get("/notice/:id", adminController.getNotice);
+
+//post
+router.post("/notice-post",adminController.uploadNotice)
+
+//edit
+router.put("/edit-notice/:id", adminController.editNotice);
+//delete
+router.delete("/notice/:id", adminController.deleteNotice)
+
+
+
 
 
 module.exports = router;

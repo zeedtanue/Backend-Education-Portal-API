@@ -21,6 +21,8 @@ app.use(fileUpload());
 require("./middlewares/passport")(passport);
 
 // User Router Middleware
+
+app.use('/public', exp.static('public'));
 app.use("/api/student", require("./routes/student"));
 app.use("/api/admin", require("./routes/admin"));
 app.use("/api/teacher", require("./routes/teacher"));
