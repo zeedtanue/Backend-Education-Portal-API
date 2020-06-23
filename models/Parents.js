@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
 
-const UserSchema = new Schema(
+const ParentsUserSchema = new Schema(
   {
     name: {
       type: String,
@@ -8,11 +8,12 @@ const UserSchema = new Schema(
     },
     email: {
       type: String,
-      required: true
+      required: true,
+      unique:true
     },
     role: {
       type: String,
-      default: "student"
+      default: "parent",
     },
     userid: {
       type: String,
@@ -27,12 +28,12 @@ const UserSchema = new Schema(
       type: String, 
       required: false
     },
-    parent:[{
-      type:Schema.Types.ObjectId,
-      ref: "parent"
-    }]
+    user:[{
+        type:Schema.Types.ObjectId,
+        ref: "users"
+    }]//1 user may have multiple students
   },
   { timestamps: true }
 );
 
-module.exports = model("users", UserSchema);
+module.exports = model("parent", ParentsUserSchema);

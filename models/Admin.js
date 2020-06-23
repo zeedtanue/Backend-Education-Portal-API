@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
 
-const UserSchema = new Schema(
+const AdminSchema = new Schema(
   {
     name: {
       type: String,
@@ -12,7 +12,7 @@ const UserSchema = new Schema(
     },
     role: {
       type: String,
-      default: "student"
+      default: "admin"
     },
     userid: {
       type: String,
@@ -26,13 +26,9 @@ const UserSchema = new Schema(
     profileImage: { 
       type: String, 
       required: false
-    },
-    parent:[{
-      type:Schema.Types.ObjectId,
-      ref: "parent"
-    }]
+    }
   },
   { timestamps: true }
 );
 
-module.exports = model("users", UserSchema);
+module.exports = model("admin", AdminSchema);

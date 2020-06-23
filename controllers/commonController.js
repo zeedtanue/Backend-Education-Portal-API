@@ -1,5 +1,6 @@
 const User = require('../models/User');
 const Book = require('../models/Book');
+const Parent = require('../models/Parents');
 const bcrypt = require("bcryptjs");
 
 exports.changePasword=async(req,res)=>{
@@ -20,87 +21,13 @@ exports.changePasword=async(req,res)=>{
 
 
 
-exports.registerStudent=(req, res) => {
-  let useridTaken = User.findOne(req.body.userid );
-    if (useridTaken) {
-      return res.status(400).json({
-        message: `userid is already taken.`,
-        success: false
-      });
-    }
-
-    let emailTaken = User.findOne(req.body.email);
-    if (emailTaken) {
-      return res.status(400).json({
-        message: `userid is already taken.`,
-        success: false
-      });
-    }
-    
-
-  if (!req.files || Object.keys(req.files).length === 0) {
-    return res.status(400).send('No files were uploaded.');
-  }
-  let profileImage = req.files.profileImage;
-
-  let uploadPath= `public/profile/${req.body.userid}.jpg`;
-  
-  profileImage.mv( uploadPath, function(err) {
-    if (err)
-      return res.status(500).send(err);
-
-    res.send('File uploaded!');
-  });
-
-  const password =  bcrypt.hashSync(req.body.userid, 12);
-
-  const user = new User({
-    name: req.body.name,
-    email: req.body.email,
-    role: "student",
-    userid:req.body.userid,
-    password:password,
-    profileImage: uploadPath
-  });
-  user
-    .save()
-    .then(result => {
-      //console.log(result);
-      res.status(201).json({
-        message: "Created Profile successfully",
-      });
-    })
-    .catch(err => {
-      console.log(err);
-      res.status(500).json({
-        error: err
-      });
-    });
-  }
-
 exports.registerParent=(req, res) => {
-  let useridTaken = User.findOne(req.body.userid);
-    if (useridTaken) {
-      return res.status(400).json({
-        message: `userid is already taken.`,
-        success: false
-      });
-    }
-
-    let emailTaken = User.findOne(req.body.email);
-    if (emailTaken) {
-      return res.status(400).json({
-        message: `userid is already taken.`,
-        success: false
-      });
-    }
-  
   if (!req.files || Object.keys(req.files).length === 0) {
     return res.status(400).send('No files were uploaded.');
   }
   let profileImage = req.files.profileImage;
 
-  let uploadPath= `public/profile/${req.body.userid}.jpg`;
+  let uploadPath= `public/profile/${req.body.name+req.body.email}.jpg`;
   
   profileImage.mv( uploadPath, function(err) {
     if (err)
@@ -109,17 +36,16 @@ exports.registerParent=(req, res) => {
     res.send('File uploaded!');
   });
 
-  const password =  bcrypt.hashSync(req.body.userid, 12);
+  const password =  bcrypt.hashSync(req.body.email, 12);
 
-  const user = new User({
+  const parent = new Parent({
     name: req.body.name,
     email: req.body.email,
-    role: "parent",
     userid:req.body.userid,
     password:password,
     profileImage: uploadPath
   });
-  user
+  parent
     .save()
     .then(result => {
       //console.log(result);
@@ -238,7 +164,7 @@ exports.registerAdmin=(req, res) => {
   }
 
 
-  
+  //books get
   exports.getAllBooks = (req, res, next) => {
     Book.find()
       .select("name subject author summery price publishedAt coverImage bookFile")
@@ -300,22 +226,6 @@ exports.registerAdmin=(req, res) => {
         res.status(500).json({ error: err });
       });
   };
-  
-  exports.deleteBook= (req, res, next) => {
-    Book.deleteOne({_id: req.params.id}).then(
-      () => {
-        res.status(200).json({
-          message: 'Deleted!'
-        });
-      }
-    ).catch(
-      (error) => {
-        res.status(400).json({
-          error: error
-        });
-      }
-    );
-  }
   
   
   

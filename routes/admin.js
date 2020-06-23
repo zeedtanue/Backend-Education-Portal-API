@@ -1,5 +1,4 @@
-const router = require("express").Router();
-// Bring in the User Registration function
+const router = require('express-promise-router')();
 
 const User =require('../models/User');
 const mongoose= require ('mongoose');
@@ -18,17 +17,68 @@ const adminController =require("../controllers/admin")
 const commonController =require("../controllers/commonController");
 
 
+router.route('/student')
+  .post(adminController.registerStudent)
+  .get(adminController.getAllUser);
+
+router.route('/student/:id')
+  .get(adminController.getUser)
+  .delete(adminController.deleteUser)
+  .put(adminController.editUser);
+
+router.route('/teacher')
+  .post(adminController.registerTeacher)
+  .get(adminController.getAllTeacher);
+
+router.route('/teacher/:id')
+  .get(adminController.getTeacher)
+  .delete(adminController.deleteTeacher)
+  .put(adminController.editTeacher);
+
+router.route('/admin')
+  .post(adminController.registerAdmin)
+  .get(adminController.getAllAdmin);
+
+router.route('/admin/:id')
+  .get(adminController.getAdmin)
+  .delete(adminController.deleteAdmin)
+  .put(adminController.editAdmin);
+
+
+router.route('/book')
+  .post(adminController.uploadBook)
+  .get(commonController.getAllBooks);
+
+router.route('/book/:id')
+  .delete(adminController.deleteBook)
+  .put(adminController.editBook)
+  .get(commonController.getBook);
+
+router.route('/notice')
+  .post(adminController.uploadNotice)
+  .get(adminController.getAllNotice);
+
+router.route('/notice/:id')
+  .delete(adminController.deleteNotice)
+  .put(adminController.editNotice)
+  .get(commonController.getNotice);
 
 
 
+
+
+
+/*
 router.get("/", function(req, res, next) {
   res.render('index', { title: 'Admin' });
 })
 
 //post requests
-//Register users
 // student Registeration Route
-router.post("/register-student", commonController.registerStudent);
+router.post("/student", adminController.registerStudent);
+//add student to parent
+router.post("/add-to-parent/:parentid/:userid", adminController.addToParent);
+
 
 // teacher Registration Route
 router.post("/register-teacher", commonController.registerTeacher);
@@ -108,10 +158,8 @@ router.get(
 router.get("/all-notice",adminController.getAllNotice )
 //specific notice
 router.get("/notice/:id", adminController.getNotice);
-
 //post
-router.post("/notice-post",adminController.uploadNotice)
-
+router.post("/notice-post",adminController.uploadNotice);
 //edit
 router.put("/edit-notice/:id", adminController.editNotice);
 //delete
@@ -119,6 +167,6 @@ router.delete("/notice/:id", adminController.deleteNotice)
 
 
 
-
+*/
 
 module.exports = router;

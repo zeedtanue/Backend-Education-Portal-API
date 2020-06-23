@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
 
-const UserSchema = new Schema(
+const TeacherSchema = new Schema(
   {
     name: {
       type: String,
@@ -12,7 +12,7 @@ const UserSchema = new Schema(
     },
     role: {
       type: String,
-      default: "student"
+      default: "teacher"
     },
     userid: {
       type: String,
@@ -27,12 +27,12 @@ const UserSchema = new Schema(
       type: String, 
       required: false
     },
-    parent:[{
-      type:Schema.Types.ObjectId,
-      ref: "parent"
-    }]
+    class: [{
+        type:Schema.Types.ObjectId,
+        ref:'class'
+    }]//1 teacher will have multiple classes
   },
   { timestamps: true }
 );
 
-module.exports = model("users", UserSchema);
+module.exports = model("teacher", TeacherSchema);
