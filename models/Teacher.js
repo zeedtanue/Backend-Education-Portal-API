@@ -27,7 +27,7 @@ const TeacherSchema = new Schema(
       type: String, 
       required: false
     },
-    class: [{
+    classes: [{
         type:Schema.Types.ObjectId,
         ref:'class'
     }]//1 teacher will have multiple classes

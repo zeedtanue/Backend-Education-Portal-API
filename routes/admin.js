@@ -1,10 +1,5 @@
 const router = require('express-promise-router')();
 
-const User =require('../models/User');
-const mongoose= require ('mongoose');
-
-
-
 const {
   userAuth,
   userLogin,
@@ -21,10 +16,32 @@ router.route('/student')
   .post(adminController.registerStudent)
   .get(adminController.getAllUser);
 
-router.route('/student/:id')
+router.route('/student/:userid')
   .get(adminController.getUser)
   .delete(adminController.deleteUser)
   .put(adminController.editUser);
+
+
+//add students to parents
+router.route('/student-in-parent/:parentid/:userid')
+  .post(adminController.addToParent)
+  .put(adminController.editUser)
+  .delete(adminController.deleteUser);
+
+  
+router.route('/parent')
+  .get(adminController.getAllParent)
+  .post(adminController.registerParent);
+router.route('/parent/:id')
+  .get(adminController.getParent)
+  .delete(adminController.deleteParent)
+  .put(adminController.editParent);
+
+
+router.route('/parent/students/:parentID')
+  .get(commonController.getStudentUnderParents);
+
+
 
 router.route('/teacher')
   .post(adminController.registerTeacher)
@@ -39,10 +56,19 @@ router.route('/admin')
   .post(adminController.registerAdmin)
   .get(adminController.getAllAdmin);
 
-router.route('/admin/:id')
-  .get(adminController.getAdmin)
-  .delete(adminController.deleteAdmin)
-  .put(adminController.editAdmin);
+router.route('/teacher/:id')
+  .get(adminController.getTeacher)
+  .delete(adminController.deleteTeacher)
+  .put(adminController.editTeacher);
+
+router.route('/notice')
+  .post(adminController.uploadNotice)
+  .get(adminController.getAllNotice);
+
+router.route('/notice/:id')
+  .get(adminController.getNotice)
+  .delete(adminController.deleteNotice)
+  .put(adminController.editNotice);
 
 
 router.route('/book')
@@ -50,22 +76,34 @@ router.route('/book')
   .get(commonController.getAllBooks);
 
 router.route('/book/:id')
+  .get(commonController.getBook)
   .delete(adminController.deleteBook)
-  .put(adminController.editBook)
-  .get(commonController.getBook);
+  .put(adminController.editBook);
 
-router.route('/notice')
-  .post(adminController.uploadNotice)
-  .get(adminController.getAllNotice);
 
-router.route('/notice/:id')
-  .delete(adminController.deleteNotice)
-  .put(adminController.editNotice)
-  .get(commonController.getNotice);
+//create section
+router.route('/section')
+  .get(adminController.getAllSection)
+  .post(adminController.createSection);
 
+router.route('/section/:id')
+  .get(adminController.getSectionClass)
 
 
 
+//add students to section
+router.route('/student-in-section/:sectionID/:studentID')
+  .post(adminController.addToSectionStudent);
+
+
+
+router.route('/class')
+  .get(adminController.getAllClass)
+  .post(adminController.createClass);
+
+  //add class to section
+router.route('/class/:sectionID/:classID')
+  .post(adminController.addClassToSection)
 
 
 /*

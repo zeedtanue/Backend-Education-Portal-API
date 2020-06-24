@@ -2,7 +2,7 @@ const { Schema, model } = require("mongoose");
 
 const SectionSchema = new Schema(
   {
-    section: {
+    sectionName: {
       type: String,
       required: true
     },
@@ -10,7 +10,7 @@ const SectionSchema = new Schema(
         type: Schema.Types.ObjectId,
         ref:'users'
     }],//1 section may have multiple students
-    class:[{
+    classes:[{
         type:Schema.Types.ObjectId,
         ref:'class'
     }]//1 section may have multiple classes

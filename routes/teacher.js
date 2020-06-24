@@ -1,19 +1,23 @@
-const router = require("express").Router();
+const router = require('express-promise-router')();
 // Bring in the User Registration function
 const {
   userAuth,
-  userLogin,
+  teacherLogin,
   checkRole,
-  userRegister,
   serializeUser
 } = require("../utils/Auth");
 
 
 const commonController =require("../controllers/commonController");
 
-router.get("/", function(req, res, next) {
-  res.render('index', { title: 'Teacher' });
-})
+
+router.route('/login')
+  .post(async (req, res) => {
+    await teacherLogin(req.body, "teacher", res);
+  })
+
+
+/*
 // teacher Login Route
 router.post("/login-teacher", async (req, res) => {
   await userLogin(req.body, "teacher", res);
@@ -46,6 +50,6 @@ router.get(
     return res.json("Hello Teacher");
   }
 );
-
+*/
 
 module.exports = router;

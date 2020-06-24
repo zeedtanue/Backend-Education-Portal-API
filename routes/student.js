@@ -1,4 +1,4 @@
-const router = require("express").Router();
+const router = require('express-promise-router')();
 // Bring in the User Registration function
 const {
   userAuth,
@@ -10,7 +10,16 @@ const {
 } = require("../utils/Auth");
 
 const commonController = require("../controllers/commonController")
+const studentController = require("../controllers/student")
 
+
+router.route('/login')
+  .post(async (req, res) => {
+    await userLogin(req.body, "student", res);
+  })
+
+
+/*
 router.get("/", function(req, res, next) {
   res.render('index', { title: 'Admin' });
 })
@@ -42,5 +51,5 @@ router.get(
   }
 );
 
-
+*/
 module.exports = router;

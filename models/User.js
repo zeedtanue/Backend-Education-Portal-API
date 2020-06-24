@@ -30,6 +30,10 @@ const UserSchema = new Schema(
     parent:[{
       type:Schema.Types.ObjectId,
       ref: "parent"
+    }],
+    section: [{
+      type:Schema.Types.ObjectId,
+      ref:"section"
     }]
   },
   { timestamps: true }
