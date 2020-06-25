@@ -2,7 +2,7 @@ const router = require('express-promise-router')();
 
 const {
   userAuth,
-  userLogin,
+  adminLogin,
   checkRole,
   userRegister,
   serializeUser
@@ -10,6 +10,11 @@ const {
 const adminController =require("../controllers/admin")
 
 const commonController =require("../controllers/commonController");
+
+router.route('/login')
+  .post(async (req, res) => {
+    await adminLogin(req.body, "admin", res);
+  })
 
 
 router.route('/student')
@@ -56,10 +61,6 @@ router.route('/admin')
   .post(adminController.registerAdmin)
   .get(adminController.getAllAdmin);
 
-router.route('/teacher/:id')
-  .get(adminController.getTeacher)
-  .delete(adminController.deleteTeacher)
-  .put(adminController.editTeacher);
 
 router.route('/notice')
   .post(adminController.uploadNotice)
@@ -102,8 +103,13 @@ router.route('/class')
   .post(adminController.createClass);
 
   //add class to section
-router.route('/class/:sectionID/:classID')
+router.route('/class-to-section/:sectionID/:classID')
   .post(adminController.addClassToSection)
+
+
+//ass teacher to class
+router.route('/teacher-to-class/:classID/:teacherID')
+  .post(adminController.addTeacherToClass)
 
 
 /*

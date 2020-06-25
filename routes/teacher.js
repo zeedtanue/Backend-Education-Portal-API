@@ -15,6 +15,15 @@ router.route('/login')
   .post(async (req, res) => {
     await teacherLogin(req.body, "teacher", res);
   })
+router.route('/class/:id')
+  .get(commonController.getAllClass);
+
+
+router.route('/get-class/:id')
+  .get(commonController.getClass);
+  
+  
+
 
 
 /*

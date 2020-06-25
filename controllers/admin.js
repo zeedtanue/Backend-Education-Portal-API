@@ -880,7 +880,6 @@ exports.createClass= async (req, res) => {
 }
 
 //add class to section
-//Add Students to parents
 exports.addClassToSection = async(req, res, next)=>{
 
 
@@ -909,7 +908,6 @@ exports.getSectionClass= (req, res, next) => {
       console.log("From database", doc);
       if (doc) {
         classes = doc.classes.subject
-        console.log(classes)
         res.status(200).json({
             section: doc.sectionName,
             classes: {
@@ -931,4 +929,19 @@ exports.getSectionClass= (req, res, next) => {
       res.status(500).json({ error: err });
     });
 };
+
+exports.addTeacherToClass= async(req, res, next)=>{
+
+  const classDB= await Class.findById(req.params.classID)
+  const teacherDB= await Teacher.findById(req.params.teacherID)
+
+  classDB.teacher.push(teacherDB)
+  teacherDB.classes.push(classDB)
+
+  await classDB.save()
+  await teacherDB.save()
+  res.status(201).json(teacherDB)
+  console.log(`${classDB.teacher} has been assinged to ${teacherDB.classes}` )
+
+}
 

@@ -2,7 +2,8 @@ const User = require('../models/User');
 const Book = require('../models/Book');
 const Parent = require('../models/Parents');
 const bcrypt = require("bcryptjs");
-
+const Teacher = require('../models/Teacher');
+const Class =require('../models/Class');
 exports.changePasword=async(req,res)=>{
     let user
     try{
@@ -18,6 +19,46 @@ exports.changePasword=async(req,res)=>{
     }
   
   };
+
+  //tacher all class
+
+
+
+  
+  exports.getAllClass= async (req, res, next) => {
+    let teacherClasses
+    try{
+      teacherClasses= await Teacher.findById(req.params.id)
+      const classIDS= teacherClasses.classes
+      const classes = [];
+
+      for(const classID of classIDS) {
+        const classDB = await Class.findById(classID);
+        console.log(classDB)
+        classes.push({ name: classDB.subject, url: 'http://localhost:5000/api/teacher/class'+classID });
+      }
+
+      return res.json(classes);
+      
+      
+
+        
+
+
+      
+    }catch(err){
+      console.log(err)
+    }
+  };
+
+    exports.getClass= async(req, res, next)=>{
+      const id = req.params.id;
+      console.log(id)
+      const classRoom = await Class.findById(id)
+      res.status(201).json(classRoom)
+    
+    }
+
 
 //get users under parents
 exports.getStudentUnderParents= async(req,res,next)=>{
