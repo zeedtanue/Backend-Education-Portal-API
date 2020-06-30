@@ -865,6 +865,34 @@ exports.getAllClass= (req, res, next) => {
       });
     });
 };
+exports.getClass=(req, res, next) => {
+  const id = req.params.id;
+  console.log(id)
+  Class.findById(id).populate('teacher')
+    .select('subject teacher')
+    .exec()
+    .then(doc => {
+      console.log("From database", doc);
+      if (doc) {
+        res.status(200).json({
+            class: doc,
+            request: {
+                type: 'GET',
+                url: 'http://localhost:5000/api/admin/class'
+            }
+        });
+      } else {
+        res
+          .status(404)
+          .json({ message: "No valid entry found for provided ID" });
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({ error: err });
+    });
+};
+
 
 exports.createClass= async (req, res) => { 
   const classDB = new Class({
@@ -935,7 +963,7 @@ exports.addTeacherToClass= async(req, res, next)=>{
   const classDB= await Class.findById(req.params.classID)
   const teacherDB= await Teacher.findById(req.params.teacherID)
 
-  classDB.teacher.push(teacherDB)
+  classDB.teacher= teacherDB
   teacherDB.classes.push(classDB)
 
   await classDB.save()

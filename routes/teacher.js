@@ -15,15 +15,27 @@ router.route('/login')
   .post(async (req, res) => {
     await teacherLogin(req.body, "teacher", res);
   })
+
+router.route('/example')
+  .get(userAuth, async(req,res)=>{
+    console.log(req.user.name)
+  }) 
+
+router.route('/class')
+  .get(userAuth, commonController.getAllClass);
+
+
 router.route('/class/:id')
-  .get(commonController.getAllClass);
-
-
-router.route('/get-class/:id')
   .get(commonController.getClass);
   
+//edit them with auto generated id req.user.id
+router.route('/class/task/:id')
+  .post(userAuth, commonController.postTask)
+  .get(commonController.getAllTask);
   
-
+router.route('/class/resource/:id')
+  .post(userAuth, commonController.postResource)
+  .get(commonController.getAllResources);
 
 
 /*

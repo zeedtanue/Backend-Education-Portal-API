@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
 
-const AssignmentSchema = new Schema(
+const ResourceSchema = new Schema(
   {
     title: {
       type: String,
@@ -10,13 +10,6 @@ const AssignmentSchema = new Schema(
         type:String,
         required:true
     },
-    dueDate:{
-      type:Date
-    },
-    submission:[{
-      type:Schema.Types.ObjectId,
-      ref:'submission'
-    }],
     teacher:{
       type:Schema.Types.ObjectId,
       ref: 'teacher'
@@ -25,7 +18,7 @@ const AssignmentSchema = new Schema(
       type:Schema.Types.ObjectId,
       ref: 'class'
     },
-    assignmentFile:{
+    resourceFile:{
         type:String,
         required:false
     }
@@ -35,4 +28,4 @@ const AssignmentSchema = new Schema(
   { timestamps: true }
 );
 
-module.exports = model("assignment", AssignmentSchema);
+module.exports = model("resource", ResourceSchema);

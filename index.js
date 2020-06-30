@@ -19,6 +19,7 @@ app.use(passport.initialize());
 app.use(fileUpload());
 
 require("./middlewares/passport")(passport);
+require("./middlewares/passportTeacher")(passport);
 
 // User Router Middleware
 

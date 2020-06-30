@@ -53,7 +53,7 @@ const userLogin = async (userCreds, role, res) => {
       token: `Bearer ${token}`,
       expiresIn: 168
     };
-
+    console.log(result)
     return res.status(200).json({
       ...result,
       message: "Hurray! You are now logged in.",
@@ -190,6 +190,7 @@ const validateuserid = async userid => {
  * @DESC Passport middleware
  */
 const userAuth = passport.authenticate("jwt", { session: false });
+
 
 /**
  * @DESC Check Role Middleware

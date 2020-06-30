@@ -17,7 +17,22 @@ router.route('/login')
   .post(async (req, res) => {
     await userLogin(req.body, "student", res);
   })
+router.route('/profile')
+  .get(userAuth, studentController.getUser)
 
+router.route('/class/:id')
+  .get(userAuth, studentController.getClass)
+
+
+//all assignment
+router.route('/assignmnets')
+  .get(userAuth, studentController.getAssignments)
+
+//missing assignmnet
+//submit assignment
+router.route('/assignments/:id')
+  .post(userAuth, studentController.submitAssignmnet)
+//upcomming submission
 
 /*
 router.get("/", function(req, res, next) {

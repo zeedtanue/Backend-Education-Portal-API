@@ -102,6 +102,10 @@ router.route('/class')
   .get(adminController.getAllClass)
   .post(adminController.createClass);
 
+    
+router.route("/class/:id")
+  .get(adminController.getClass)
+
   //add class to section
 router.route('/class-to-section/:sectionID/:classID')
   .post(adminController.addClassToSection)
