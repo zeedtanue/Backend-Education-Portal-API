@@ -15,6 +15,10 @@ const SubmissionSchema = new Schema(
       type:Schema.Types.ObjectId,
       ref:'assignment'
     },
+    class:{
+      type: Schema.Types.ObjectId,
+      ref:'class'
+    },
     student:{
       type:Schema.Types.ObjectId,
       ref: 'user'

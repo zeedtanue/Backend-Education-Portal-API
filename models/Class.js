@@ -18,10 +18,10 @@ const ClassSchema = new Schema(
       type:Schema.Types.ObjectId,
       ref:'resource'
     }],
-    section:[{
+    section:{
       type:Schema.Types.ObjectId,
       ref: 'section'
-    }],
+    },
 
   },
   { timestamps: true }

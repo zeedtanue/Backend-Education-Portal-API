@@ -32,10 +32,31 @@ router.route('/class/:id')
 router.route('/class/task/:id')
   .post(userAuth, commonController.postTask)
   .get(commonController.getAllTask);
+//get specific task
+router.route('/class/get-task/:id')
+  .get(commonController.getTask)
   
 router.route('/class/resource/:id')
   .post(userAuth, commonController.postResource)
   .get(commonController.getAllResources);
+
+
+router.route('/class/task/:id/submissions')
+  .get(commonController.getAllSubmission)
+
+
+
+//find students of class
+router.route('/class/:id/students')
+  .get(commonController.getAllStudent)
+
+//route submission by student--performance 
+//FILTER OUT
+router.route('/student/assignment-mark/:classid/:studentid')
+  .get(commonController.getSubmissionHistory)
+
+//MARK STUDENTS
+
 
 
 /*

@@ -31,9 +31,21 @@ const UserSchema = new Schema(
       type:Schema.Types.ObjectId,
       ref: "parent"
     }],
-    section: [{
+    section: {
       type:Schema.Types.ObjectId,
       ref:"section"
+    },
+    payment:[{
+      description: {
+        type:String
+      },
+      amount:{
+        type:String
+      },
+      paid:{
+        type:Boolean,
+        default:false
+      }
     }]
   },
   { timestamps: true }

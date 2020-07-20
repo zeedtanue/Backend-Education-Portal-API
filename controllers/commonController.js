@@ -6,6 +6,7 @@ const Teacher = require('../models/Teacher');
 const Class =require('../models/Class');
 const Assignment = require('../models/Assignment');
 const Resource = require('../models/Resource');
+const Submission = require('../models/Submission');
 exports.changePasword=async(req,res)=>{
     let user
     try{
@@ -70,6 +71,7 @@ exports.postTask=  async (req, res) => {
   const assignment = new Assignment({
       title: req.body.title,
       details:req.body.details,
+      mark: req.body.mark,
       dueDate: req.body.dueDate,
       assignmentFile: process.env.URL+assignmentPath,
 
@@ -103,7 +105,7 @@ exports.getAllTask= async (req, res, next) => {
     for(const assignmentID of assignmentIDS) {
       const assignmentDB = await Assignment.findById(assignmentID);
       console.log(assignmentDB)
-      runningAssignment.push({ name: assignmentDB.title, url: 'http://localhost:5000/api/teacher/class/task/'+assignmentID });
+      runningAssignment.push({ name: assignmentDB.title, url: 'http://localhost:5000/api/teacher/class/get-task/'+assignmentID });
     }
 
     return res.json(runningAssignment);
@@ -111,6 +113,16 @@ exports.getAllTask= async (req, res, next) => {
     console.log(err)
   }
 };
+
+//get specific task
+exports.getTask = async (req, res)=>{
+  const task = await Assignment.findById(req.params.id)
+  try{
+    res.status(200).json(task)
+  }catch(err){
+    res.json(500).json(err)
+  }
+}
 
 //resouces and notes
 exports.postResource=  async (req, res) => {
@@ -248,5 +260,81 @@ exports.getStudentUnderParents= async(req,res,next)=>{
   };
   
   
-  
-  
+  //submission of specific task
+  exports.getAllSubmission= async (req, res)=>{
+    const assignmentDB = await Assignment.findById(req.params.id).populate('submission')
+    const submissionIDS = assignmentDB.submission
+    arrayOfRes=[]
+    for(submissionID of submissionIDS){
+      const name =await User.findById(submissionID.student)
+      console.log(name.name)
+      arrayOfRes.push({ name: name.name,
+                        title: submissionID.title,
+                        submittedFile: submissionID.submittedFile,
+                        submittedDate: submissionID.submittedDate
+                        })
+    }
+    try{
+      res.status(201).json(arrayOfRes)
+    }catch(err){
+      console.log(err)
+
+    }
+    
+  }
+
+
+  //get all the student under class
+  exports.getAllStudent= async (req, res, next) => {
+    let classStudent
+    try{
+      classStudent= await Class.findById(req.params.id).populate('section')
+      const section= classStudent.section
+      const studentIDS= section.student
+      console.log(studentIDS)
+
+      const studentArray=[]
+      for (const studentID of studentIDS){
+        const studentDB = await User.findById(studentID)
+        studentArray.push({name: studentDB.name, userID:studentDB.userid, assignments: `${process.env.URL}api/teacher/student/assignment-mark/${req.params.id}/${studentDB.id}` })
+        res
+          .status(200)
+          .json(
+            studentArray
+          )
+      }
+      }catch(err){
+      console.log(err)
+    }
+  };
+  exports.getSubmissionHistory= async(req, res, next)=>{
+    const classDB = await Class.findById(req.params.classid).populate('assignments')
+    const studentDB = await User.findById(req.params.studentid)
+    const assignments= classDB.assignments
+    const resArray= []
+    for (const assignment of assignments){
+      const submissions= assignment.submission
+      
+      for (const submission of submissions){
+        const submissionDB = await Submission.findById(submission)
+      
+        if(submissionDB.student==req.params.studentid){
+          resArray.push({submissionDB})
+        }else{
+          resArray.push("no file were uploaded")
+        }
+        
+      }
+      
+    }
+    try{
+      res
+        .status(200)
+        .json(resArray)
+
+    }catch(err){
+      res
+        .status(500)
+        .json(err)
+    }
+  }

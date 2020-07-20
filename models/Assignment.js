@@ -10,6 +10,10 @@ const AssignmentSchema = new Schema(
         type:String,
         required:true
     },
+    mark:{
+      type:Number,
+      required:true
+    },
     dueDate:{
       type:Date
     },

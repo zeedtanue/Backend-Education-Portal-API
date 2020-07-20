@@ -1,28 +1,27 @@
-const router = require("express").Router();
+const router = require('express-promise-router')();
 // Bring in the User Registration function
 const {
   userAuth,
-  userLogin,
+  parentLogin,
   checkRole,
   serializeUser
 } = require("../utils/Auth");
 
 const commonController =require("../controllers/commonController");
+const parentController= require("../controllers/parent")
 
-
-router.get("/", function(req, res, next) {
-  res.render('index', { title: 'Admin' });
-})
-
+/*
 // Profile Route
-router.get("/profile", userAuth, async (req, res) => {
-    return res.json(serializeUser(req.user));
-  });
-
+router.route("/profile")
+  .get(userAuth,parentController.getProfile)  
+*/
 // parent Login Route
-router.post("/login-parent", async (req, res) => {
-  await userLogin(req.body, "parent", res);
+router.post("/login", async (req, res) => {
+  await parentLogin(req.body, "parent", res);
 });
+
+router.route('/profile')
+  .get(userAuth, parentController.getProfile)
 
 // parent change password Route
 router.put("/change-password/:id", 
@@ -30,6 +29,13 @@ router.put("/change-password/:id",
             checkRole(["parent"]), 
             commonController.changePasword);
 
+//payment
+
+
+
+
+
+/*
 
 //Parents Protected Route
 router.get(
@@ -40,6 +46,6 @@ router.get(
     return res.json("Hello parent");
   }
 );
-
+*/
 
 module.exports = router;

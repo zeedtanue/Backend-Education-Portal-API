@@ -102,7 +102,7 @@ router.route('/class')
   .get(adminController.getAllClass)
   .post(adminController.createClass);
 
-    
+
 router.route("/class/:id")
   .get(adminController.getClass)
 
@@ -114,6 +114,16 @@ router.route('/class-to-section/:sectionID/:classID')
 //ass teacher to class
 router.route('/teacher-to-class/:classID/:teacherID')
   .post(adminController.addTeacherToClass)
+
+
+//Students payment
+
+
+router.route('/student/payment/:id')
+  .post(adminController.payment)//post payment
+  .get(adminController.getPayment)//get payment
+
+//status hold
 
 
 /*

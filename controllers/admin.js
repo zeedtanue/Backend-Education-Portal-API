@@ -25,7 +25,7 @@ exports.registerStudent=(req, res) => {
       return res.status(500).send(err);
 
     console.log('File uploaded!');
-  });
+  })
 
   const password =  bcrypt.hashSync(req.body.userid, 12);
 
@@ -35,7 +35,7 @@ exports.registerStudent=(req, res) => {
     role: "student",
     userid:req.body.userid,
     password:password,
-    profileImage: uploadPath,
+    profileImage: process.env.URL+uploadPath,
 
   });
   user
@@ -65,6 +65,7 @@ exports.getAllUser=(req, res, next) => {
         count: docs.length,
         user: docs.map(doc => {
           return {
+            id:doc.id,
             name: doc.name,
             email: doc.email,
             userid: doc.userid,
@@ -92,7 +93,7 @@ exports.getAllUser=(req, res, next) => {
 exports.getUser= async(req, res, next)=>{
   const id = req.params.userid;
   console.log(id)
-  const user = await User.findById(id)
+  const user = await User.findById(id).populate('section')
   res.status(201).json(user)
 
 }
@@ -183,7 +184,7 @@ exports.registerParent=(req, res) => {
     email: req.body.email,
     userid:req.body.userid,
     password:password,
-    profileImage: uploadPath,
+    profileImage:process.env.URL+ uploadPath,
 
   });
   parent
@@ -212,6 +213,7 @@ exports.getAllParent=(req, res, next) => {
         count: docs.length,
         parent: docs.map(doc => {
           return {
+            id:doc.id,
             name: doc.name,
             email: doc.email,
             userid: doc.userid,
@@ -311,7 +313,7 @@ exports.registerTeacher=(req, res) => {
     email: req.body.email,
     userid:req.body.userid,
     password:password,
-    profileImage: uploadPath,
+    profileImage: process.env.URL+uploadPath,
 
   });
   teacher
@@ -340,6 +342,7 @@ exports.getAllTeacher=(req, res, next) => {
         count: docs.length,
         teacher: docs.map(doc => {
           return {
+            id:doc.id,
             name: doc.name,
             email: doc.email,
             userid: doc.userid,
@@ -347,7 +350,7 @@ exports.getAllTeacher=(req, res, next) => {
             profileImage: doc.profileImage, 
             request: {
               type: "GET",
-              url: "http://localhost:5000/api/admin/teacher/" + doc.id
+              url: `${process.env.URL}api/admin/teacher/` + doc.id
             }
           };
         })
@@ -669,6 +672,7 @@ exports.getAllNotice=(req, res, next) => {
         count: docs.length,
         notice: docs.map(doc => {
           return {
+            id:doc.id,
             name: doc.name,
             publishedAt: doc.publishedAt,
             cover: doc.cover, 
@@ -782,7 +786,9 @@ exports.getSection= async(req, res, next)=>{
 
 exports.getAllSection= (req, res, next) => {
   const section = Section.find().populate('student');
+  section.populate('classes')
   console.log(section.student)
+  console.log(section.classes)
   section
     .select("sectionName student")
     .exec()
@@ -791,7 +797,11 @@ exports.getAllSection= (req, res, next) => {
         count: docs.length,
         section: docs.map(doc => {
           return {
+            id:doc.id,
             name: doc.sectionName,
+            classes_count:doc.classes.length,
+            classes:doc.classes,
+            student_count:doc.student.length,
             students:doc.student, 
             request: {
               type: "GET",
@@ -820,8 +830,9 @@ exports.addToSectionStudent = async(req, res, next)=>{
   
   //student DB
   const studentDB= await User.findById(req.params.studentID)
+  console.log(studentDB)
   
-  studentDB.section.push(sectionDB)
+  studentDB.section = sectionDB
   sectionDB.student.push(studentDB)
 
   await sectionDB.save()
@@ -915,7 +926,7 @@ exports.addClassToSection = async(req, res, next)=>{
   const classDB= await Class.findById(req.params.classID)
   
 
-  classDB.section.push(sectionDB)
+  classDB.section = sectionDB
   sectionDB.classes.push(classDB)
 
   await classDB.save()
@@ -929,8 +940,12 @@ exports.addClassToSection = async(req, res, next)=>{
 exports.getSectionClass= (req, res, next) => {
   const id = req.params.id;
   console.log(id)
-  Section.findById(id).populate('classes')
-    .select('sectionName classes')
+  const section = Section.findById(id).populate('classes')
+  section.populate('student')
+  
+  
+  section
+    .select('sectionName classes student')
     .exec()
     .then(doc => {
       console.log("From database", doc);
@@ -938,9 +953,10 @@ exports.getSectionClass= (req, res, next) => {
         classes = doc.classes.subject
         res.status(200).json({
             section: doc.sectionName,
-            classes: {
-              name: doc.classes
-            },
+            
+            class: doc.classes,
+            studentName:{name: doc.student.name},
+            student:doc.student,
             request: {
                 type: 'GET',
                 url: 'http://localhost:5000/api/admin/all-notice'
@@ -973,3 +989,31 @@ exports.addTeacherToClass= async(req, res, next)=>{
 
 }
 
+exports.payment = async(req, res, next)=>{
+  const student = await User.findById(req.params.id)
+  const payment= student.payment
+  payment.push({description: req.body.description,amount: req.body.amount, paid:false })
+  await student.save()
+  try {
+    res 
+      .status(200)
+      .json(payment)
+  } catch (error) {
+      res
+        .status(500)
+        .json(error)
+  }
+}
+
+exports.getPayment= async(req, res, next)=>{
+  const student = await User.findById(req.params.id)
+  try {
+    res
+      .status(200)
+      .json({name: student.name, userid:student.userid, parents:student.parent, paymentHistory: student.payment})
+  } catch (error) {
+      res
+        .status(500)
+        .json(error)
+  }
+}

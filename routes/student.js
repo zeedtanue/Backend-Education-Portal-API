@@ -23,9 +23,11 @@ router.route('/profile')
 router.route('/class/:id')
   .get(userAuth, studentController.getClass)
 
+router.route('/class')
+  .get(userAuth, studentController.getAllClass)
 
 //all assignment
-router.route('/assignmnets')
+router.route('/assignments')
   .get(userAuth, studentController.getAssignments)
 
 //missing assignmnet
@@ -34,6 +36,22 @@ router.route('/assignments/:id')
   .post(userAuth, studentController.submitAssignmnet)
 //upcomming submission
 
+
+
+//payment
+router.route('/payment')
+  .get(userAuth, studentController.getPayment)
+
+router.route('/payment-unpaid')
+  .get(userAuth, studentController.getUnPaidPayment)
+
+//payment bill details
+router.route('/pay/:id')
+  .get(userAuth,studentController.getOnePayment)
+  .post(userAuth, studentController.payOnePayment)
+  
+router.route('/payment-paid')
+.get(userAuth, studentController.getPaidPayment)
 /*
 router.get("/", function(req, res, next) {
   res.render('index', { title: 'Admin' });
