@@ -122,6 +122,10 @@ router.route('/teacher-to-class/:classID/:teacherID')
 router.route('/student/payment/:id')
   .post(adminController.payment)//post payment
   .get(adminController.getPayment)//get payment
+  
+
+router.route('/student/payment/:id/:amount')
+  .post(adminController.ConfirmPayment)//confirmation
 
 //status hold
 

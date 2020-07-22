@@ -845,8 +845,8 @@ exports.addToSectionStudent = async(req, res, next)=>{
 
 //class
 exports.getAllClass= (req, res, next) => {
-  const className = Class.find().populate('student');
-  className
+  const className = Class.find().populate('teacher');
+  className.populate('section')
     .select("subject section teacher resource assignment")
     .exec()
     .then(docs => {
@@ -854,6 +854,7 @@ exports.getAllClass= (req, res, next) => {
         count: docs.length,
         className: docs.map(doc => {
           return {
+            id:doc.id,
             subject: doc.subject,
             section:doc.section,
             teacher:doc.teacher,
@@ -1017,3 +1018,22 @@ exports.getPayment= async(req, res, next)=>{
         .json(error)
   }
 }
+
+
+exports.ConfirmPayment= async(req,res)=>{
+  let payment
+  try{
+    
+    user = await User.findById(req.params.id)
+    const paymentDB = user.payment.filter( (payment)=> {
+      return payment.amount === req.params.amount;
+    }).pop();
+    paymentDB.paid=true;
+    await user.save()
+    console.log(paymentDB)
+    res.status(200).json(paymentDB)
+  }catch(err) {
+    res.status(500).json(err)
+  }
+
+};
