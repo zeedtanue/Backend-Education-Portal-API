@@ -19,7 +19,7 @@ app.use(passport.initialize());
 app.use(fileUpload());
 
 require("./middlewares/passport")(passport);
-
+//require("./middlewares/passport")(studentPassport)
 // User Router Middleware
 
 app.use('/public', exp.static('public'));

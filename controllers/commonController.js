@@ -10,7 +10,7 @@ const Submission = require('../models/Submission');
 exports.changePasword=async(req,res)=>{
     let user
     try{
-      user= await User.findById(req.params.id)
+      user= await Teacher.findById(req.user._id)
       const password = await bcrypt.hash(req.body.password, 12);
       user.password = password
       await user.save()
@@ -26,26 +26,50 @@ exports.changePasword=async(req,res)=>{
   //tacher all class
 
 
+//teacher get profile
+exports.getUserTeacher=async (req, res)=>{
+  
+
+  const userDB =await Teacher.findById(req.user._id)
+  
+
+
+    
+     return res.status(200).json({
+       user:{
+        "name":req.user.name,
+        "userid": req.user.userid,
+        "email":req.user.email,
+        "image": req.user.profileImage,
+        "totalClasses":userDB.classes.length
+       }
+      
+  
+    })};
+
 
   
   exports.getAllClass= async (req, res, next) => {
     let teacherClasses
     try{
-      teacherClasses= await Teacher.findById(req.user._id)
-      const classIDS= teacherClasses.classes
+      teacherClasses= await Teacher.findById(req.user._id).populate('classes')
+      
+      /*const classIDS= teacherClasses.classes
       const classes = [];
 
       for(const classID of classIDS) {
         const classDB = await Class.findById(classID);
         console.log(classDB)
         classes.push({ name: classDB.subject, url: 'http://localhost:5000/api/teacher/class/'+classID });
-      }
+      } */
 
-      return res.json(classes);
+      return res.json(teacherClasses.classes);
     }catch(err){
-      console.log(err)
+     console.log(err)
+
     }
-  };
+ 
+ };
 
     exports.getClass= async(req, res, next)=>{
       const id = req.params.id;
@@ -60,7 +84,7 @@ exports.postTask=  async (req, res) => {
 
   let asFile = req.files.assignmentFile;
   
-  let assignmentPath= `public/assignments/fromTeacher/${req.body.title+req.user.id}.jpg`;
+  let assignmentPath= `public/assignments/fromTeacher/${req.body.title+req.user.id}.pdf`;
 
   asFile.mv(assignmentPath,  function(err) {
     if (err)
@@ -90,6 +114,7 @@ exports.postTask=  async (req, res) => {
         
         
     }catch(err){
+      console.log(err)
         res.status(400).json({message: err.message})
     }
 }
@@ -116,9 +141,10 @@ exports.getAllTask= async (req, res, next) => {
 
 //get specific task
 exports.getTask = async (req, res)=>{
-  const task = await Assignment.findById(req.params.id)
+  const task = await Assignment.findById(req.params.id).populate('submission')
+  task.populate('student')
   try{
-    res.status(200).json(task)
+    res.status(200).json({"task":task, "student":task.student})
   }catch(err){
     res.json(500).json(err)
   }
@@ -130,7 +156,7 @@ exports.postResource=  async (req, res) => {
   let resourceFile = req.files.resourceFile;
   
   
-  let resourcePath= `public/resource/${req.body.title+req.user.id}.jpg`;
+  let resourcePath= `public/resource/${req.body.title+req.user.id}.pdf`;
 
   resourceFile.mv(resourcePath,  function(err) {
     if (err)
@@ -206,6 +232,7 @@ exports.getStudentUnderParents= async(req,res,next)=>{
           count: docs.length,
           book: docs.map(doc => {
             return {
+              id:doc.id,
               name: doc.name,
               author: doc.author,
               subject: doc.subject,
@@ -241,7 +268,7 @@ exports.getStudentUnderParents= async(req,res,next)=>{
         console.log("From database", doc);
         if (doc) {
           res.status(200).json({
-              user: doc,
+              book: doc,
               request: {
                   type: 'GET',
                   url: 'http://localhost:5000/api/admin/books'
@@ -296,7 +323,7 @@ exports.getStudentUnderParents= async(req,res,next)=>{
       const studentArray=[]
       for (const studentID of studentIDS){
         const studentDB = await User.findById(studentID)
-        studentArray.push({name: studentDB.name, userID:studentDB.userid, assignments: `${process.env.URL}api/teacher/student/assignment-mark/${req.params.id}/${studentDB.id}` })
+        studentArray.push({id: studentDB._id,name: studentDB.name,profileImage:process.env.URL +studentDB.profileImage, userID:studentDB.userid, assignments: `${process.env.URL}api/teacher/student/assignment-mark/${req.params.id}/${studentDB.id}` })
         res
           .status(200)
           .json(

@@ -17,6 +17,8 @@ router.route('/login')
   .post(async (req, res) => {
     await userLogin(req.body, "student", res);
   })
+router.route('/logout')
+  .get(studentController.logout)
 router.route('/profile')
   .get(userAuth, studentController.getUser)
 
@@ -36,8 +38,9 @@ router.route('/assignments/:id')
   .post(userAuth, studentController.submitAssignmnet)
 //upcomming submission
 
-
-
+//books
+router.route('/books')
+  .get(commonController.getAllBooks)
 //payment
 router.route('/payment')
   .get(userAuth, studentController.getPayment)
@@ -52,6 +55,13 @@ router.route('/pay/:id')
   
 router.route('/payment-paid')
 .get(userAuth, studentController.getPaidPayment)
+
+router.route('/change-password')
+  .put(userAuth, studentController.changePasword)
+
+
+
+
 /*
 router.get("/", function(req, res, next) {
   res.render('index', { title: 'Admin' });

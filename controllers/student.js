@@ -8,7 +8,27 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { SECRET } = require("../config");
 
+exports.changePasword=async(req,res)=>{
+  let user
+  try{
+    user= await User.findById(req.user._id)
+    const password = await bcrypt.hash(req.body.password, 12);
+    user.password = password
+    await user.save()
+    res.status(200).json({
+        message:"updated Password"
+    })
+  }catch(err) {
+    console.log(err)
+  }
 
+};
+
+exports.logout = async(req, res) => {
+
+  req.logout();
+  res.status(200).json('logged Out')
+}
 exports.getUser=async (req, res)=>{
   
 
@@ -68,7 +88,7 @@ exports.getAllClass =async(req,res,next)=>{
       const classDB = await Class.findById(classId).populate('teacher');
       const teacher = classDB.teacher
 
-      classesArray.push({name:  classDB.subject, teacher:teacher.name , url: `${process.env.URL}api/student/class/${classId}`} );
+      classesArray.push({name:  classDB.subject, id: classDB.id, teacher:teacher.name , url: `${process.env.URL}api/student/class/${classId}`} );
      }
      return res.status(200).json( 
       classesArray

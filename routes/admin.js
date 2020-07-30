@@ -15,7 +15,8 @@ router.route('/login')
   .post(async (req, res) => {
     await adminLogin(req.body, "admin", res);
   })
-
+router.route('/register-admin')
+  .post(adminController.registerAdmin)
 
 router.route('/student')
   .post(adminController.registerStudent)
@@ -96,7 +97,8 @@ router.route('/section/:id')
 router.route('/student-in-section/:sectionID/:studentID')
   .post(adminController.addToSectionStudent);
 
-
+router.route('/class/get-task/:id')
+  .get(commonController.getTask)
 
 router.route('/class')
   .get(adminController.getAllClass)

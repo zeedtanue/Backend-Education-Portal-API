@@ -218,7 +218,7 @@ exports.getAllParent=(req, res, next) => {
             email: doc.email,
             userid: doc.userid,
             role: doc.role,
-            profileImage: doc.profileImage, 
+            profileImage: process.env.URL+doc.profileImage, 
             request: {
               type: "GET",
               url: "http://localhost:5000/api/admin/parent/" + doc.id
@@ -370,7 +370,7 @@ exports.getAllTeacher=(req, res, next) => {
 exports.getTeacher= async(req, res, next)=>{
   const id = req.params.id;
   console.log(id)
-  const teacher = await Teacher.findById(id)
+  const teacher = await Teacher.findById(id).populate('classes')
   res.status(201).json(teacher)
 
 }
@@ -880,7 +880,10 @@ exports.getAllClass= (req, res, next) => {
 exports.getClass=(req, res, next) => {
   const id = req.params.id;
   console.log(id)
-  Class.findById(id).populate('teacher')
+  const classDB=Class.findById(id).populate('teacher')
+  classDB.populate('section')
+  classDB.populate('resource')
+  classDB.populate('assignments')
     .select('subject teacher')
     .exec()
     .then(doc => {

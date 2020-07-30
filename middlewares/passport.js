@@ -12,7 +12,7 @@ const opts = {
 module.exports = passport => {
   passport.use(
     new Strategy(opts, async (payload, done) => {
-      await Parent.findById(payload.user_id)
+      await User.findById(payload.user_id)
         .then(user => {
           if (user) {
             return done(null, user);
@@ -25,24 +25,3 @@ module.exports = passport => {
     })
   );
 };
-
-/*
-
-module.exports = teacherPassport => {
-  teacherPassport.use(
-    new Strategy(opts, async (payload, done) => {
-      await Teacher.findById(payload.user_id)
-        .then(user => {
-          if (user) {
-            return done(null, user);
-          }
-          return done(null, false);
-        })
-        .catch(err => {
-          return done(null, false);
-        });
-    })
-  );
-};
-
-*/

@@ -16,6 +16,12 @@ router.route('/login')
     await teacherLogin(req.body, "teacher", res);
   })
 
+router.route('/profile')
+  .get(userAuth, commonController.getUserTeacher);
+router.route('/change-password')
+  .put(userAuth, commonController.changePasword);
+
+
 router.route('/example')
   .get(userAuth, async(req,res)=>{
     console.log(req.user.name)
