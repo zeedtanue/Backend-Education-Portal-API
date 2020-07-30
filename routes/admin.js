@@ -11,6 +11,11 @@ const adminController =require("../controllers/admin")
 
 const commonController =require("../controllers/commonController");
 
+router.route('/')
+  .get(async (req,res)=>{
+    res.status(200).json('successful')
+  })
+
 router.route('/login')
   .post(async (req, res) => {
     await adminLogin(req.body, "admin", res);
