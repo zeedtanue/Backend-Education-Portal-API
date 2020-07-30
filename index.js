@@ -7,8 +7,8 @@ const { success, error } = require("consola");
 const fileUpload = require('express-fileupload');
 
 // Bring in the app constants
-const { DB, PORT } = require("./config");
-
+const { DB } = require("./config");
+const PORT=process.env.PORT || 5000
 // Initialize the application
 const app = exp();
 
