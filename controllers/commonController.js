@@ -60,7 +60,7 @@ exports.getUserTeacher=async (req, res)=>{
       for(const classID of classIDS) {
         const classDB = await Class.findById(classID);
         console.log(classDB)
-        classes.push({ name: classDB.subject, url: 'http://localhost:5000/api/teacher/class/'+classID });
+        classes.push({ name: classDB.subject, url: 'https://creatixa-student-portal.herokuapp.com/api/teacher/class/'+classID });
       } */
 
       return res.json(teacherClasses.classes);
@@ -130,7 +130,7 @@ exports.getAllTask= async (req, res, next) => {
     for(const assignmentID of assignmentIDS) {
       const assignmentDB = await Assignment.findById(assignmentID);
       console.log(assignmentDB)
-      runningAssignment.push({ name: assignmentDB.title, url: 'http://localhost:5000/api/teacher/class/get-task/'+assignmentID });
+      runningAssignment.push({ name: assignmentDB.title, url: 'https://creatixa-student-portal.herokuapp.com/api/teacher/class/get-task/'+assignmentID });
     }
 
     return res.json(runningAssignment);
@@ -203,7 +203,7 @@ exports.getAllResources= async (req, res, next) => {
     for(const resourceID of resourceIDS) {
       const resourceDB = await Resource.findById(resourceID);
       console.log(resourceDB)
-      resource.push({ name: resourceDB.title, url: 'http://localhost:5000/api/teacher/class/resource/'+assignmentID, file: resourceDB.resourceFile });
+      resource.push({ name: resourceDB.title, url: 'https://creatixa-student-portal.herokuapp.com/api/teacher/class/resource/'+assignmentID, file: resourceDB.resourceFile });
     }
 
     return res.json(resource);
@@ -242,7 +242,7 @@ exports.getStudentUnderParents= async(req,res,next)=>{
               bookFile: doc.bookFile, 
               request: {
                 type: "GET",
-                url: "http://localhost:5000/api/admin/book/" + doc.id
+                url: "https://creatixa-student-portal.herokuapp.com/api/admin/book/" + doc.id
               }
             };
           })
@@ -271,7 +271,7 @@ exports.getStudentUnderParents= async(req,res,next)=>{
               book: doc,
               request: {
                   type: 'GET',
-                  url: 'http://localhost:5000/api/admin/books'
+                  url: 'https://creatixa-student-portal.herokuapp.com/api/admin/books'
               }
           });
         } else {
