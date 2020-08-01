@@ -1,7 +1,7 @@
 const router = require('express-promise-router')();
 // Bring in the User Registration function
 const {
-  userAuth,
+  teacherAuth,
   teacherLogin,
   checkRole,
   serializeUser
@@ -17,18 +17,18 @@ router.route('/login')
   })
 
 router.route('/profile')
-  .get(userAuth, commonController.getUserTeacher);
+  .get(teacherAuth, commonController.getUserTeacher);
 router.route('/change-password')
-  .put(userAuth, commonController.changePasword);
+  .put(teacherAuth, commonController.changePasword);
 
 
 router.route('/example')
-  .get(userAuth, async(req,res)=>{
+  .get(teacherAuth, async(req,res)=>{
     console.log(req.user.name)
   }) 
 
 router.route('/class')
-  .get(userAuth, commonController.getAllClass);
+  .get(teacherAuth, commonController.getAllClass);
 
 
 router.route('/class/:id')
@@ -36,14 +36,14 @@ router.route('/class/:id')
   
 //edit them with auto generated id req.user.id
 router.route('/class/task/:id')
-  .post(userAuth, commonController.postTask)
+  .post(teacherAuth, commonController.postTask)
   .get(commonController.getAllTask);
 //get specific task
 router.route('/class/get-task/:id')
   .get(commonController.getTask)
   
 router.route('/class/resource/:id')
-  .post(userAuth, commonController.postResource)
+  .post(teacherAuth, commonController.postResource)
   .get(commonController.getAllResources);
 
 
@@ -73,26 +73,26 @@ router.post("/login-teacher", async (req, res) => {
 
 // teacher change password Route
 router.put("/change-password/:id", 
-            userAuth,
+            teacherAuth,
             checkRole(["teacher"]), 
             commonController.changePasword);
 
 
 
 // Profile Route
-router.get("/profile", userAuth, async (req, res) => {
+router.get("/profile", teacherAuth, async (req, res) => {
   return res.json(serializeUser(req.user));
 });
 
 //Books
 //Book List
-router.get("/books",userAuth, checkRole(["teacher"]), commonController.getAllBooks);
+router.get("/books",teacherAuth, checkRole(["teacher"]), commonController.getAllBooks);
 
 
 // teacher Protected Route
 router.get(
   "/teacher-protectd",
-  userAuth,
+  teacherAuth,
   checkRole(["teacher"]),
   async (req, res) => {
     return res.json("Hello Teacher");

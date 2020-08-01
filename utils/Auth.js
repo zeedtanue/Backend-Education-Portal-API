@@ -247,7 +247,12 @@ const validateuserid = async userid => {
 /**
  * @DESC Passport middleware
  */
-const userAuth = passport.authenticate("jwt", { session: false });
+const userAuth = passport.authenticate("passport-user", { session: false });
+const teacherAuth = passport.authenticate("passport-teacher", { session: false });
+const parentAuth = passport.authenticate("passport-parent", { session: false });
+
+const adminAuth = passport.authenticate("passport-admin", { session: false });
+
 
 
 
@@ -277,6 +282,9 @@ const serializeUser = user => {
 
 module.exports = {
   userAuth,
+  teacherAuth,
+  parentAuth,
+  adminAuth,
   checkRole,
   userLogin,
   adminLogin,
