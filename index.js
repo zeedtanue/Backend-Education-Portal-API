@@ -21,6 +21,7 @@ app.use(fileUpload());
 require("./middlewares/passport")(passport);
 //require("./middlewares/passport")(studentPassport)
 // User Router Middleware
+app.get('/status', (req, res) => res.send({status: "I'm alive!"}));
 
 app.use('/public', exp.static('public'));
 app.use("/api/student", require("./routes/student"));
