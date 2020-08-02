@@ -73,7 +73,7 @@ exports.getAllUser=(req, res, next) => {
             profileImage: doc.profileImage, 
             request: {
               type: "GET",
-              url: "http://164.90.230.104:5000/api/admin/student/" + doc.id
+              url: "http://46.101.188.213:5000/api/admin/student/" + doc.id
             }
           };
         })
@@ -221,7 +221,7 @@ exports.getAllParent=(req, res, next) => {
             profileImage: process.env.URL+doc.profileImage, 
             request: {
               type: "GET",
-              url: "http://164.90.230.104:5000/api/admin/parent/" + doc.id
+              url: "http://46.101.188.213:5000/api/admin/parent/" + doc.id
             }
           };
         })
@@ -478,7 +478,7 @@ exports.getAllAdmin=(req, res, next) => {
             profileImage: doc.profileImage, 
             request: {
               type: "GET",
-              url: "http://164.90.230.104:5000/api/admin/admin/" + doc.id
+              url: "http://46.101.188.213:5000/api/admin/admin/" + doc.id
             }
           };
         })
@@ -678,7 +678,7 @@ exports.getAllNotice=(req, res, next) => {
             cover: doc.cover, 
             request: {
               type: "GET",
-              url: "http://164.90.230.104:5000/api/admin/notice/" + doc.id
+              url: "http://46.101.188.213:5000/api/admin/notice/" + doc.id
             }
           };
         })
@@ -709,7 +709,7 @@ exports.getNotice= (req, res, next) => {
             notice: doc,
             request: {
                 type: 'GET',
-                url: 'http://164.90.230.104:5000/api/admin/all-notice'
+                url: 'http://46.101.188.213:5000/api/admin/all-notice'
             }
         });
       } else {
@@ -805,7 +805,7 @@ exports.getAllSection= (req, res, next) => {
             students:doc.student, 
             request: {
               type: "GET",
-              url: "http://164.90.230.104:5000/api/admin/section/" + doc.id
+              url: "http://46.101.188.213:5000/api/admin/section/" + doc.id
             }
           };
         })
@@ -862,7 +862,7 @@ exports.getAllClass= (req, res, next) => {
             resource:doc.resource, 
             request: {
               type: "GET",
-              url: "http://164.90.230.104:5000/api/admin/class/" + doc.id
+              url: "http://46.101.188.213:5000/api/admin/class/" + doc.id
             }
           };
         })
@@ -893,7 +893,7 @@ exports.getClass=(req, res, next) => {
             class: doc,
             request: {
                 type: 'GET',
-                url: 'http://164.90.230.104:5000/api/admin/class'
+                url: 'http://46.101.188.213:5000/api/admin/class'
             }
         });
       } else {
@@ -963,7 +963,7 @@ exports.getSectionClass= (req, res, next) => {
             student:doc.student,
             request: {
                 type: 'GET',
-                url: 'http://164.90.230.104:5000/api/admin/all-notice'
+                url: 'http://46.101.188.213:5000/api/admin/all-notice'
             }
         });
       } else {
