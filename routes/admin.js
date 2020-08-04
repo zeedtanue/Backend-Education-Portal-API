@@ -134,6 +134,10 @@ router.route('/student/payment/:id')
 router.route('/student/payment/:id/:amount')
   .post(adminController.ConfirmPayment)//confirmation
 
+router.route('/add-to-parent/:parentid/:userid')
+  .post(adminController.addToParent)
+
+
 //status hold
 
 
