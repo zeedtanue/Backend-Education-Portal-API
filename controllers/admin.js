@@ -241,7 +241,7 @@ exports.getAllParent=(req, res, next) => {
 exports.getParent= async(req, res, next)=>{
   const id = req.params.id;
   console.log(id)
-  const parent = await Parent.findById(id)
+  const parent = await Parent.findById(id).populate('user')
   res.status(201).json(parent)
 
 }
