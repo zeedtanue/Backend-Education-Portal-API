@@ -1,7 +1,7 @@
 const router = require('express-promise-router')();
 // Bring in the User Registration function
 const {
-  userAuth,
+  parentAuth,
   parentLogin,
   checkRole,
   serializeUser
@@ -21,13 +21,16 @@ router.post("/login", async (req, res) => {
 });
 
 router.route('/profile')
-  .get(userAuth, parentController.getProfile)
+  .get(parentAuth, parentController.getProfile)
 
 // parent change password Route
 router.put("/change-password/:id", 
-            userAuth,
+            parentAuth,
             checkRole(["parent"]), 
             commonController.changePasword);
+
+
+
 
 //payment
 
