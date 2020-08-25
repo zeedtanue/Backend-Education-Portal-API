@@ -365,3 +365,32 @@ exports.getStudentUnderParents= async(req,res,next)=>{
         .json(err)
     }
   }
+  exports.getClassNotice=  async(req, res, next)=>{
+    const classDB = await Class.findById(req.params.id)
+    try {
+      res
+        .status(200)
+        .json(classDB.classNotice)
+    } catch (error) {
+        res
+          .status(500)
+          .json(error)
+    }
+  }
+
+  exports.postClassNotice= async(req, res, next)=>{
+    const teacher =await Teacher.findById(req.user._id)
+    const classDB = await Class.findById(req.params.id)
+    const classNotice= classDB.classNotice
+    classNotice.push({comment: req.body.comment,teacher: teacher })
+    await classDB.save()
+    try {
+      res 
+        .status(200)
+        .json(classNotice)
+    } catch (error) {
+        res
+          .status(500)
+          .json(error)
+    }
+  }

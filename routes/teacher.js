@@ -33,6 +33,11 @@ router.route('/class')
 
 router.route('/class/:id')
   .get(commonController.getClass);
+
+router.route('/class/:id/notice')
+  .post( teacherAuth, commonController.postClassNotice) //notice by id
+  .get(commonController.getClassNotice);
+
   
 //edit them with auto generated id req.user.id
 router.route('/class/task/:id')

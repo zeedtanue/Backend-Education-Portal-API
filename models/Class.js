@@ -10,6 +10,20 @@ const ClassSchema = new Schema(
       type:Schema.Types.ObjectId,
       ref: 'teacher'
     },
+    classNotice:[{
+      comment: {
+        type:String
+      },
+      teacher:{
+        type:Schema.Types.ObjectId,
+        ref: 'teacher'
+      },
+      publishedAt: {
+        type: Date,
+        required: true,
+        default: Date.now
+      },
+    }],
     assignments:[{
       type:Schema.Types.ObjectId,
       ref: 'assignment'
